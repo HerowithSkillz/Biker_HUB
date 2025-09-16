@@ -32,6 +32,15 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('event-detail', kwargs={'pk': self.pk})
 
+class BikeImage(models.Model):
+    bike = models.ForeignKey('Bike', on_delete=models.CASCADE, related_name='additional_images')
+    image = models.ImageField(upload_to='bikes/')
+    caption = models.CharField(max_length=200, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.bike.name}"
+
 class CommunityList(models.Model):
     name = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='photos/', blank=True, null=True)

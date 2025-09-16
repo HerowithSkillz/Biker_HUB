@@ -4,41 +4,107 @@
 
 {% block content %}
 <div class="container mt-4">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
     <div class="card">
         <div class="card-body">
-            <h1 class="card-title">{{ event.title }}</h1>
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <h1 class="card-title mb-0">{{ event.title }}</h1>
+                {% if user == event.host %}
+                <div class="btn-group">
+                    <a href="{% url 'event-update' event.pk %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <a href="{% url 'event-delete' event.pk %}" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
             <div class="mb-4">
+                <p class="text-muted mb-1">
+                    <i class="bi bi-geo-alt-fill"></i> {{ event.location }}
+                </p>
+                <p class="text-muted mb-1">
+                    <i class="bi bi-calendar-event-fill"></i> {{ event.date|date:"F j, Y g:i A" }}
+                </p>
                 <p class="text-muted">
-                    <i class="bi bi-geo-alt"></i> {{ event.location }}<br>
-                    <i class="bi bi-calendar"></i> {{ event.date|date:"F j, Y" }}<br>
-                    <i class="bi bi-person"></i> Hosted by: {{ event.host.username }}
+                    <i class="bi bi-person-fill"></i> Hosted by: {{ event.host.username }}
                 </p>
             </div>
+
             <div class="mb-4">
-                <h5>Description</h5>
-                <p>{{ event.description }}</p>
+                <h5 class="card-subtitle mb-2">Description</h5>
+                <p class="card-text">{{ event.description }}</p>
             </div>
             
-            {% if user.is_authenticated %}
-                {% if user in event.participants.all %}
-                    <form method="post" action="{% url 'event-leave' event.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-warning">Leave Event</button>
-                    </form>
-                {% else %}
-                    <form method="post" action="{% url 'event-join' event.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Join Event</button>
-                    </form>
-                {% endif %}
-            {% endif %}
+            <hr>
             
-            {% if user == event.host %}
-            <div class="mt-3">
-                <a href="{% url 'event-list' %}" class="btn btn-primary">Back to Events</a>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    {% if user.is_authenticated %}
+                        {% if user in event.participants.all %}
+                            <form method="post" action="{% url 'event-leave' event.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-warning">
+                                    <i class="bi bi-box-arrow-left"></i> Leave Event
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'event-join' event.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-success">
+                                    <i class="bi bi-person-plus"></i> Join Event
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <a href="{% url 'event-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Events
+                </a>
             </div>
-            {% endif %}
         </div>
     </div>
+
+    {% if user == event.host %}
+    <div class="card mt-4">
+        <div class="card-header">
+            Event Management
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Registered Participants</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Joined Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participant in event.participants.all %}
+                        <tr>
+                            <td>{{ participant.username }}</td>
+                            <td>{{ participant.date_joined|date:"M d, Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center">No participants yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
