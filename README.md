@@ -1,5 +1,3 @@
-Here’s a clean **README.md** draft for your Django Biker Community project 🚲.
-
 ---
 
 # 🏍️ BikerHub – Django Biker Community Website
@@ -115,5 +113,3 @@ bikerhub/
 MIT License – feel free to use & modify.
 
 ---
-
-Do you want me to also include **screenshots placeholders** (like `![screenshot](docs/home.png)`) in the README so it looks more professional for GitHub?
