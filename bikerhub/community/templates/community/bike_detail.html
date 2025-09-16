@@ -1,0 +1,23 @@
+{% extends "layouts.html" %}
+
+{% block title %}{{ bike.brand }} {{ bike.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        {% if bike.image %}
+        <img src="{{ bike.image.url }}" class="card-img-top" alt="{{ bike.name }}">
+        {% endif %}
+        <div class="card-body">
+            <h1 class="card-title">{{ bike.brand }} {{ bike.name }}</h1>
+            <p class="text-muted">Year: {{ bike.year }}</p>
+            <p class="card-text">{{ bike.description }}</p>
+            <p class="text-muted">Owner: {{ bike.owner.username }}</p>
+            
+            {% if user == bike.owner %}
+            <a href="{% url 'bike-list' %}" class="btn btn-primary">Back to Bikes</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

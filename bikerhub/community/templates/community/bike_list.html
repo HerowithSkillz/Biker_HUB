@@ -1,0 +1,36 @@
+{% extends "layouts.html" %}
+
+{% block title %}Bikes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Bikes</h1>
+        {% if user.is_authenticated %}
+        <a href="{% url 'bike-create' %}" class="btn btn-primary">Add New Bike</a>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        {% for bike in bikes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if bike.image %}
+                <img src="{{ bike.image.url }}" class="card-img-top" alt="{{ bike.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ bike.brand }} {{ bike.name }}</h5>
+                    <p class="card-text">{{ bike.description|truncatewords:30 }}</p>
+                    <p class="card-text"><small class="text-muted">Year: {{ bike.year }}</small></p>
+                    <a href="{% url 'bike-detail' bike.pk %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No bikes added yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
