@@ -4,9 +4,9 @@
 
 A simple Django web app where bikers can:
 
-* showcase their bikes in a personal **garage**
-* host & attend **events**
-* browse other bikers and their collections
+-> showcase their bikes in a personal garage
+-> host & attend events
+-> browse other bikers and their collections
 
 This project demonstrates **CRUD operations** using Django + Bootstrap.
 
